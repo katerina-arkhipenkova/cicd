@@ -7,6 +7,21 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: admin
+      POSTGRES_PASS: password
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: cicd_test
+      SECRET_KEY: django-insecure-nw^y+m^wmxza1asgk+)!ua2qx9)g+#v=6%76-9i8i(6eqiw94j
+      ALLOWED_HOSTS: *
+    services:
+      postgres_main:
+        image: postgres:12
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASS }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
     steps:
       - name: Check updates
         uses: actions/checkout@v2
@@ -24,3 +39,13 @@ jobs:
 
       - name: Testing
         run: python manage.py test
+        env:
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+          DEBUG: "0"
+          ALLOWED_HOSTS: ${{ env.ALLOWED_HOSTS }}
+          DB_ENGINE: django.db.backends.postgresql
+          DB_NAME: ${{ env.POSTGRES_DB }}
+          DB_USER: ${{ env.POSTGRES_USER }}
+          DB_PASSWORD: ${{ env.POSTGRES_PASS }}
+          DB_HOST: ${{ env.POSTGRES_HOST }}
+          DB_PORT: ${{ env.POSTGRES_PORT }}
