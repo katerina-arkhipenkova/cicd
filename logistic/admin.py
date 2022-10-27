@@ -4,7 +4,7 @@ from .models import Product, Stock, StockProduct
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'title', 'description',]
 
 
 @admin.register(Stock)
